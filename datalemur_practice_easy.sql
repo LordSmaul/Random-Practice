@@ -4,7 +4,8 @@ SELECT num_tweets AS tweet_bucket, COUNT(user_id) as users_num
 FROM (
     SELECT user_id, COUNT(tweet_id) as num_tweets FROM tweets
     WHERE YEAR(tweet_date) = 2022
-    GROUP BY user_id ) AS total_tweets
+    GROUP BY user_id 
+  ) AS total_tweets
 GROUP BY num_tweets;
 
 -- Data Science Skills - MySQL
@@ -20,8 +21,7 @@ ORDER BY candidate_id;
 -- https://datalemur.com/questions/sql-page-with-no-likes
 SELECT page_id
 FROM pages
-WHERE page_id NOT IN (
-  SELECT page_id from page_likes )
+WHERE page_id NOT IN (SELECT page_id from page_likes)
 ORDER BY page_id;
 
 -- Unfinished Parts - PostgreSQL 14
@@ -58,9 +58,10 @@ LIMIT 2;
 -- Duplicate Job Listings - MySQL
 -- http://datalemur.com/questions/duplicate-job-listings
 WITH job_count_total AS (
-SELECT company_id, title, description, COUNT(job_id) AS job_count
-FROM job_listings
-GROUP BY company_id, title, description )
+  SELECT company_id, title, description, COUNT(job_id) AS job_count
+  FROM job_listings
+  GROUP BY company_id, title, description
+)
 
 SELECT COUNT(company_id) AS duplicate_companies
 FROM job_count_total
@@ -107,10 +108,11 @@ AND TIMESTAMPDIFF(DAY, signup_date, action_date) = 1;
 -- IBM db2 Product Analysis - PostgreSQL 14
 -- https://datalemur.com/questions/sql-ibm-db2-product-analytics
 WITH employee_queries AS (
-SELECT e.employee_id, COUNT(DISTINCT q.query_id) AS unique_queries
-FROM employees e LEFT JOIN queries q ON e.employee_id = q.employee_id
-AND EXTRACT(MONTH FROM query_starttime) >= 7 AND EXTRACT(MONTH FROM query_starttime) < 10
-GROUP BY e.employee_id )
+  SELECT e.employee_id, COUNT(DISTINCT q.query_id) AS unique_queries
+  FROM employees e LEFT JOIN queries q ON e.employee_id = q.employee_id
+  AND EXTRACT(MONTH FROM query_starttime) >= 7 AND EXTRACT(MONTH FROM query_starttime) < 10
+  GROUP BY e.employee_id
+)
 
 SELECT unique_queries, COUNT(employee_id) AS employee_count
 FROM employee_queries
@@ -128,7 +130,7 @@ ORDER BY difference DESC;
 -- Compressed Mean - MySQL
 -- https://datalemur.com/questions/alibaba-compressed-mean
 SELECT ROUND(SUM(CAST(item_count AS DECIMAL) * order_occurrences)
-       / SUM(order_occurrences), 1) AS mean
+/ SUM(order_occurrences), 1) AS mean
 FROM items_per_order;
 
 -- Pharmacy Analytics (Part 1) - MySQL
@@ -163,4 +165,4 @@ FROM (
   FROM callers
   GROUP BY policy_holder_id
   HAVING COUNT(case_id) >= 3
-) AS calls;
+  ) AS calls;
