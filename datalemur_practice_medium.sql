@@ -69,6 +69,25 @@ SELECT ROUND(COUNT(t.email_id)::DECIMAL / COUNT(e.email_id), 2) AS activation_ra
 FROM emails e LEFT JOIN texts t 
 ON e.email_id = t.email_id AND t.signup_action = 'Confirmed';
 
+-- Spotify Streaming History - PostgreSQL 14
+-- https://datalemur.com/questions/spotify-streaming-history
+WITH history AS (
+  SELECT user_id, song_id, song_plays
+  FROM songs_history
+
+  UNION ALL
+
+  SELECT user_id, song_id, COUNT(song_id) AS song_plays
+  FROM songs_weekly
+  WHERE DATE(listen_time) <= '2022-08-04'
+  GROUP BY user_id, song_id
+)
+
+SELECT user_id, song_id, SUM(song_plays) AS song_plays
+FROM history
+GROUP BY user_id, song_id
+ORDER BY song_plays DESC;
+
 -- Supercloud Customer - PostgreSQL 14
 -- https://datalemur.com/questions/supercloud-customer
 WITH customer_count AS (
